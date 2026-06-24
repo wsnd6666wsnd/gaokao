@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>高考加油 🎓</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C8973A;
+      --gold-light: #F0C96B;
+      --red: #C0392B;
+      --ink: #1A1208;
+      --paper: #FDF6E3;
+      --paper-dark: #F5E9CC;
+      --accent: #8B1A1A;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Noto Sans SC', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 背景纹理 */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(200,151,58,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(192,57,43,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* 烟花粒子 */
+    .fireworks-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: fly 1.2s ease-out forwards;
+    }
+
+    @keyframes fly {
+      0%   { transform: translate(0,0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+    }
+
+    /* 主卡片 */
+    .card {
+      width: min(92vw, 380px);
+      background: var(--paper);
+      border: 2px solid var(--gold);
+      border-radius: 4px;
+      padding: 40px 32px 36px;
+      text-align: center;
+      position: relative;
+      box-shadow:
+        0 0 0 6px var(--paper),
+        0 0 0 8px rgba(200,151,58,0.3),
+        0 12px 40px rgba(26,18,8,0.15);
+      z-index: 10;
+    }
+
+    /* 角花装饰 */
+    .card::before, .card::after,
+    .card-inner::before, .card-inner::after {
+      content: '❧';
+      position: absolute;
+      color: var(--gold);
+      font-size: 18px;
+      line-height: 1;
+    }
+    .card::before  { top: 8px; left: 10px; }
+    .card::after   { top: 8px; right: 10px; transform: scaleX(-1); }
+    .card-inner::before { bottom: 8px; left: 10px; transform: scaleY(-1); }
+    .card-inner::after  { bottom: 8px; right: 10px; transform: scale(-1); }
+
+    .card-inner { position: relative; }
+
+    /* 顶部标签 */
+    .tag {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 4px 14px;
+      border-radius: 2px;
+      margin-bottom: 24px;
+    }
+
+    /* 大标题 */
+    .title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(36px, 12vw, 52px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--accent);
+      letter-spacing: 4px;
+      margin-bottom: 6px;
+    }
+
+    .title span {
+      display: block;
+      font-size: clamp(14px, 4vw, 18px);
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: 6px;
+      margin-top: 4px;
+    }
+
+    /* 分隔线 */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 22px 0;
+      color: var(--gold-light);
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
+    .divider-icon { font-size: 16px; }
+
+    /* 祝福语展示区 */
+    .blessing-box {
+      background: var(--paper-dark);
+      border: 1px solid rgba(200,151,58,0.3);
+      border-radius: 3px;
+      padding: 20px 18px;
+      margin-bottom: 24px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blessing-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(15px, 4.5vw, 18px);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.7;
+      letter-spacing: 1px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .blessing-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .blessing-sub {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--gold);
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    /* 按钮 */
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--red) 0%, #9B2020 100%);
+      color: #FFF8E7;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(192,57,43,0.35);
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(192,57,43,0.3);
+    }
+
+    /* 计数器 */
+    .counter {
+      margin-top: 16px;
+      font-size: 12px;
+      color: rgba(26,18,8,0.35);
+      letter-spacing: 1px;
+    }
+
+    /* 底部小字 */
+    .footer-note {
+      margin-top: 20px;
+      font-size: 11px;
+      color: rgba(26,18,8,0.3);
+      letter-spacing: 2px;
+    }
+
+    /* 入场动画 */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card {
+      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* 浮动文字 */
+    .float-chars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .float-char {
+      position: absolute;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: rgba(200,151,58,0.12);
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) rotate(var(--rot)); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-20vh) rotate(var(--rot)); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, .particle, .float-char { animation: none !important; transition: none !important; }
+      .blessing-text { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景浮动汉字 -->
+  <div class="float-chars" id="floatChars"></div>
+
+  <!-- 烟花容器 -->
+  <div class="fireworks-container" id="fireworks"></div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="tag">二〇二五年 · 高考季</div>
+
+      <div class="title">
+        金榜题名
+        <span>GAOKAO 2025</span>
+      </div>
+
+      <div class="divider"><span class="divider-icon">✦</span></div>
+
+      <div class="blessing-box">
+        <div>
+          <div class="blessing-text" id="blessingText">点击下方，开启你的专属祝福 ✨</div>
+          <div class="blessing-sub" id="blessingSub"></div>
+        </div>
+      </div>
+
+      <button class="btn" id="mainBtn" onclick="drawBlessing()">
+        抽取祝福
+      </button>
+
+      <div class="counter" id="counter"></div>
+
+      <div class="footer-note">愿你前程似锦 · 梦想成真</div>
+    </div>
+  </div>
+
+  <script>
+    const blessings = [
+      { main: "超常发挥，一鸣惊人", sub: "你的努力，终将照亮前程" },
+      { main: "心想事成，旗开得胜", sub: "笔尖流淌的，是三年的积累" },
+      { main: "沉着应战，稳中求胜", sub: "相信自己，你比想象中更强" },
+      { main: "金榜题名，万事大吉", sub: "愿你的名字出现在最美的地方" },
+      { main: "才华横溢，笑傲考场", sub: "那些熬过的夜，都是星光" },
+      { main: "学海扬帆，前途无量", sub: "每一分付出，都值得被看见" },
+      { main: "蟾宫折桂，马到成功", sub: "此刻出发，未来已在等你" },
+      { main: "厚积薄发，一举夺魁", sub: "十年磨一剑，今日正当时" },
+    ];
+
+    let count = 0;
+    let lastIndex = -1;
+
+    function drawBlessing() {
+      count++;
+      let idx;
+      do { idx = Math.floor(Math.random() * blessings.length); }
+      while (idx === lastIndex && blessings.length > 1);
+      lastIndex = idx;
+
+      const { main, sub } = blessings[idx];
+      const textEl = document.getElementById('blessingText');
+      const subEl  = document.getElementById('blessingSub');
+      const counter = document.getElementById('counter');
+
+      textEl.classList.remove('visible');
+      setTimeout(() => {
+        textEl.textContent = main;
+        subEl.textContent  = sub;
+        textEl.classList.add('visible');
+      }, 200);
+
+      counter.textContent = `已为你送出第 ${count} 份祝福`;
+
+      launchFireworks();
+    }
+
+    // 烟花效果
+    function launchFireworks() {
+      const container = document.getElementById('fireworks');
+      const colors = ['#C8973A','#F0C96B','#C0392B','#E74C3C','#F39C12','#fff'];
+      const cx = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
+      const cy = window.innerHeight / 3 + (Math.random() - 0.5) * 100;
+
+      for (let i = 0; i < 28; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const angle = (i / 28) * Math.PI * 2;
+        const dist  = 60 + Math.random() * 80;
+        p.style.cssText = `
+          left: ${cx}px; top: ${cy}px;
+          background: ${colors[Math.floor(Math.random()*colors.length)]};
+          --tx: ${Math.cos(angle)*dist}px;
+          --ty: ${Math.sin(angle)*dist}px;
+          animation-duration: ${0.8 + Math.random()*0.5}s;
+          animation-delay: ${Math.random()*0.1}s;
+          width: ${4 + Math.random()*5}px;
+          height: ${4 + Math.random()*5}px;
+        `;
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 1500);
+      }
+    }
+
+    // 背景浮动文字
+    const chars = ['福','考','梦','志','学','金','榜','题','名','才','华'];
+    const floatContainer = document.getElementById('floatChars');
+    chars.forEach((ch, i) => {
+      const el = document.createElement('div');
+      el.className = 'float-char';
+      el.textContent = ch;
+      el.style.cssText = `
+        left: ${5 + (i / chars.length) * 90}%;
+        --rot: ${(Math.random()-0.5)*20}deg;
+        animation-duration: ${12 + Math.random()*10}s;
+        animation-delay: ${-Math.random()*15}s;
+        font-size: ${16 + Math.random()*14}px;
+      `;
+      floatContainer.appendChild(el);
+    });
+
+    // 首次自动展示
+    setTimeout(() => {
+      const textEl = document.getElementById('blessingText');
+      textEl.classList.add('visible');
+    }, 600);
+  </script>
+</body>
+</html>
