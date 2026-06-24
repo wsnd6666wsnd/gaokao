@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>高考加油 🎓</title>
+  <title>明天查分 🎓</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400&display=swap');
 
@@ -32,7 +32,6 @@
       position: relative;
     }
 
-    /* 背景纹理 */
     body::before {
       content: '';
       position: fixed;
@@ -43,7 +42,6 @@
       pointer-events: none;
     }
 
-    /* 烟花粒子 */
     .fireworks-container {
       position: fixed;
       inset: 0;
@@ -64,13 +62,12 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
     }
 
-    /* 主卡片 */
     .card {
       width: min(92vw, 380px);
       background: var(--paper);
       border: 2px solid var(--gold);
       border-radius: 4px;
-      padding: 40px 32px 36px;
+      padding: 28px 32px 36px;
       text-align: center;
       position: relative;
       box-shadow:
@@ -78,9 +75,9 @@
         0 0 0 8px rgba(200,151,58,0.3),
         0 12px 40px rgba(26,18,8,0.15);
       z-index: 10;
+      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
-    /* 角花装饰 */
     .card::before, .card::after,
     .card-inner::before, .card-inner::after {
       content: '❧';
@@ -96,7 +93,47 @@
 
     .card-inner { position: relative; }
 
-    /* 顶部标签 */
+    .maker-line {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    .pay-btn {
+      display: inline-block;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 6px 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .pay-btn:active { background: var(--gold); color: #fff; }
+
+    .pay-msg {
+      display: none;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 10px;
+      animation: popIn 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
     .tag {
       display: inline-block;
       background: var(--red);
@@ -107,35 +144,33 @@
       letter-spacing: 3px;
       padding: 4px 14px;
       border-radius: 2px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
-    /* 大标题 */
     .title {
       font-family: 'Noto Serif SC', serif;
-      font-size: clamp(36px, 12vw, 52px);
+      font-size: clamp(32px, 10vw, 46px);
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1.15;
       color: var(--accent);
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       margin-bottom: 6px;
     }
 
     .title span {
       display: block;
-      font-size: clamp(14px, 4vw, 18px);
+      font-size: clamp(12px, 3.5vw, 15px);
       font-weight: 400;
       color: var(--gold);
-      letter-spacing: 6px;
-      margin-top: 4px;
+      letter-spacing: 4px;
+      margin-top: 6px;
     }
 
-    /* 分隔线 */
     .divider {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: 22px 0;
+      margin: 18px 0;
       color: var(--gold-light);
     }
     .divider::before, .divider::after {
@@ -144,59 +179,51 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
     }
-    .divider-icon { font-size: 16px; }
 
-    /* 祝福语展示区 */
     .blessing-box {
       background: var(--paper-dark);
       border: 1px solid rgba(200,151,58,0.3);
       border-radius: 3px;
       padding: 20px 18px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       min-height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
     }
 
     .blessing-text {
       font-family: 'Noto Serif SC', serif;
-      font-size: clamp(15px, 4.5vw, 18px);
+      font-size: clamp(14px, 4.2vw, 17px);
       font-weight: 700;
       color: var(--accent);
-      line-height: 1.7;
+      line-height: 1.75;
       letter-spacing: 1px;
       opacity: 0;
       transform: translateY(8px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
-    .blessing-text.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .blessing-text.visible { opacity: 1; transform: translateY(0); }
 
     .blessing-sub {
       font-family: 'Noto Sans SC', sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 300;
       color: var(--gold);
       margin-top: 8px;
       letter-spacing: 1px;
     }
 
-    /* 按钮 */
     .btn {
       display: inline-block;
       background: linear-gradient(135deg, var(--red) 0%, #9B2020 100%);
       color: #FFF8E7;
       font-family: 'Noto Serif SC', serif;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: 4px;
-      padding: 14px 36px;
+      padding: 13px 32px;
       border: none;
       border-radius: 3px;
       cursor: pointer;
@@ -206,59 +233,34 @@
       box-shadow: 0 4px 16px rgba(192,57,43,0.35);
     }
 
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
-      pointer-events: none;
-    }
+    .btn:active { transform: scale(0.97); }
 
-    .btn:active {
-      transform: scale(0.97);
-      box-shadow: 0 2px 8px rgba(192,57,43,0.3);
-    }
-
-    /* 计数器 */
     .counter {
-      margin-top: 16px;
-      font-size: 12px;
+      margin-top: 14px;
+      font-size: 11px;
       color: rgba(26,18,8,0.35);
       letter-spacing: 1px;
     }
 
-    /* 底部小字 */
     .footer-note {
-      margin-top: 20px;
+      margin-top: 18px;
       font-size: 11px;
       color: rgba(26,18,8,0.3);
       letter-spacing: 2px;
     }
 
-    /* 入场动画 */
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(20px) scale(0.97); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .card {
-      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    /* 浮动文字 */
-    .float-chars {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
+    .float-chars { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
 
     .float-char {
       position: absolute;
       font-family: 'Noto Serif SC', serif;
-      font-size: 20px;
       font-weight: 900;
-      color: rgba(200,151,58,0.12);
+      color: rgba(200,151,58,0.1);
       animation: floatUp linear infinite;
     }
 
@@ -269,51 +271,7 @@
       100% { transform: translateY(-20vh) rotate(var(--rot)); opacity: 0; }
     }
 
-    .maker-line {
-      font-family: 'Noto Serif SC', serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 3px;
-      margin-bottom: 10px;
-    }
-
-    .pay-btn {
-      display: inline-block;
-      background: transparent;
-      border: 1.5px solid var(--gold);
-      color: var(--gold);
-      font-family: 'Noto Sans SC', sans-serif;
-      font-size: 13px;
-      letter-spacing: 2px;
-      padding: 7px 18px;
-      border-radius: 3px;
-      cursor: pointer;
-      margin-bottom: 18px;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .pay-btn:active {
-      background: var(--gold);
-      color: #fff;
-    }
-
-    .pay-msg {
-      display: none;
-      font-family: 'Noto Serif SC', serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--red);
-      margin-bottom: 14px;
-      animation: popIn 0.3s cubic-bezier(0.22,1,0.36,1);
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.7); opacity: 0; }
-      to   { transform: scale(1);   opacity: 1; }
-    }
-
-    
+    @media (prefers-reduced-motion: reduce) {
       *, .particle, .float-char { animation: none !important; transition: none !important; }
       .blessing-text { opacity: 1; transform: none; }
     }
@@ -321,54 +279,49 @@
 </head>
 <body>
 
-  <!-- 背景浮动汉字 -->
   <div class="float-chars" id="floatChars"></div>
-
-  <!-- 烟花容器 -->
   <div class="fireworks-container" id="fireworks"></div>
 
   <div class="card">
     <div class="card-inner">
+
       <div class="maker-line">由白奎腾独家制作</div>
       <button class="pay-btn" onclick="document.getElementById('payMsg').style.display='block'">点击付给白费用</button>
       <div id="payMsg" class="pay-msg">你爹怎么可能要你钱 😄</div>
 
-      <div class="tag">二〇二五年 · 高考季</div>
+      <div class="tag">二〇二六年 · 查分前夕</div>
 
       <div class="title">
-        金榜题名
-        <span>GAOKAO 2025</span>
+        明日查分
+        <span>GAOKAO 2026 · 成绩公布</span>
       </div>
 
-      <div class="divider"><span class="divider-icon">✦</span></div>
+      <div class="divider"><span>✦</span></div>
 
       <div class="blessing-box">
         <div>
-          <div class="blessing-text" id="blessingText">点击下方，开启你的专属祝福 ✨</div>
+          <div class="blessing-text" id="blessingText">点击下方，开启你的专属查分祝福 ✨</div>
           <div class="blessing-sub" id="blessingSub"></div>
         </div>
       </div>
 
-      <button class="btn" id="mainBtn" onclick="drawBlessing()">
-        抽取祝福
-      </button>
+      <button class="btn" onclick="drawBlessing()">抽取祝福</button>
 
       <div class="counter" id="counter"></div>
-
-      <div class="footer-note">愿你前程似锦 · 梦想成真</div>
+      <div class="footer-note">无论分数几何 · 你已尽力而为</div>
     </div>
   </div>
 
   <script>
     const blessings = [
-      { main: "超常发挥，一鸣惊人", sub: "你的努力，终将照亮前程" },
-      { main: "心想事成，旗开得胜", sub: "笔尖流淌的，是三年的积累" },
-      { main: "沉着应战，稳中求胜", sub: "相信自己，你比想象中更强" },
-      { main: "金榜题名，万事大吉", sub: "愿你的名字出现在最美的地方" },
-      { main: "才华横溢，笑傲考场", sub: "那些熬过的夜，都是星光" },
-      { main: "学海扬帆，前途无量", sub: "每一分付出，都值得被看见" },
-      { main: "蟾宫折桂，马到成功", sub: "此刻出发，未来已在等你" },
-      { main: "厚积薄发，一举夺魁", sub: "十年磨一剑，今日正当时" },
+      { main: "愿你分数让爸妈沉默三秒\n然后红包塞满口袋", sub: "那种沉默，叫做骄傲" },
+      { main: "查分时愿屏幕亮起\n是你最想看到的数字", sub: "三年的灯火，今天给你答案" },
+      { main: "愿你查分那一刻\n笑出声来", sub: "你值得这份惊喜" },
+      { main: "发挥超常，分数喜人\n第一志愿稳稳录取", sub: "梦想的大门，正在为你打开" },
+      { main: "愿你查分手不抖\n看完分数心不跳\n因为已经超出预期", sub: "努力从不辜负任何人" },
+      { main: "分数只是起点\n你的故事才刚刚开始", sub: "无论结果，前程都属于你" },
+      { main: "愿你查分那天\n爸妈比你还激动", sub: "因为他们知道你有多拼" },
+      { main: "金榜题名不是终点\n是你新旅程的第一步", sub: "愿你所向披靡，无往不利" },
     ];
 
     let count = 0;
@@ -388,64 +341,56 @@
 
       textEl.classList.remove('visible');
       setTimeout(() => {
-        textEl.textContent = main;
-        subEl.textContent  = sub;
+        textEl.innerHTML = main.replace(/\n/g, '<br>');
+        subEl.textContent = sub;
         textEl.classList.add('visible');
       }, 200);
 
       counter.textContent = `已为你送出第 ${count} 份祝福`;
-
       launchFireworks();
     }
 
-    // 烟花效果
     function launchFireworks() {
       const container = document.getElementById('fireworks');
       const colors = ['#C8973A','#F0C96B','#C0392B','#E74C3C','#F39C12','#fff'];
       const cx = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
       const cy = window.innerHeight / 3 + (Math.random() - 0.5) * 100;
-
       for (let i = 0; i < 28; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
         const angle = (i / 28) * Math.PI * 2;
         const dist  = 60 + Math.random() * 80;
         p.style.cssText = `
-          left: ${cx}px; top: ${cy}px;
-          background: ${colors[Math.floor(Math.random()*colors.length)]};
-          --tx: ${Math.cos(angle)*dist}px;
-          --ty: ${Math.sin(angle)*dist}px;
-          animation-duration: ${0.8 + Math.random()*0.5}s;
-          animation-delay: ${Math.random()*0.1}s;
-          width: ${4 + Math.random()*5}px;
-          height: ${4 + Math.random()*5}px;
+          left:${cx}px;top:${cy}px;
+          background:${colors[Math.floor(Math.random()*colors.length)]};
+          --tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;
+          animation-duration:${0.8+Math.random()*0.5}s;
+          animation-delay:${Math.random()*0.1}s;
+          width:${4+Math.random()*5}px;height:${4+Math.random()*5}px;
         `;
         container.appendChild(p);
         setTimeout(() => p.remove(), 1500);
       }
     }
 
-    // 背景浮动文字
-    const chars = ['福','考','梦','志','学','金','榜','题','名','才','华'];
+    const chars = ['分','榜','梦','志','录','金','喜','题','名','才','福'];
     const floatContainer = document.getElementById('floatChars');
     chars.forEach((ch, i) => {
       const el = document.createElement('div');
       el.className = 'float-char';
       el.textContent = ch;
       el.style.cssText = `
-        left: ${5 + (i / chars.length) * 90}%;
-        --rot: ${(Math.random()-0.5)*20}deg;
-        animation-duration: ${12 + Math.random()*10}s;
-        animation-delay: ${-Math.random()*15}s;
-        font-size: ${16 + Math.random()*14}px;
+        left:${5+(i/chars.length)*90}%;
+        --rot:${(Math.random()-0.5)*20}deg;
+        animation-duration:${12+Math.random()*10}s;
+        animation-delay:${-Math.random()*15}s;
+        font-size:${16+Math.random()*14}px;
       `;
       floatContainer.appendChild(el);
     });
 
-    // 首次自动展示
     setTimeout(() => {
-      const textEl = document.getElementById('blessingText');
-      textEl.classList.add('visible');
+      document.getElementById('blessingText').classList.add('visible');
     }, 600);
   </script>
 </body>
